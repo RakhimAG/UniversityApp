@@ -16,5 +16,10 @@ class Student
 
     public string Email { get; set; }
 
-    public List<Course> Courses { get; set; }
+    public string PhoneNumber { get; set; }
+
+    public List<Course> Courses { get; set; } = new();
+
+    public override string ToString() =>
+        $"Id : {Id}\nName : {Name}\nAge : {Age}\nEmail : {Email}\n";
 }

@@ -12,8 +12,8 @@ using UniversityApp.Contexts;
 namespace UniversityApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260914125353_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20260917140702_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace UniversityApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CourseStudent", b =>
+                {
+                    b.Property<int>("CoursesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CoursesId", "StudentsId");
+
+                    b.HasIndex("StudentsId");
+
+                    b.ToTable("CourseStudent");
+                });
 
             modelBuilder.Entity("UniversityApp.Entities.Course", b =>
                 {
@@ -41,15 +56,10 @@ namespace UniversityApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.HasIndex("TeacherId");
 
@@ -126,12 +136,23 @@ namespace UniversityApp.Migrations
                     b.ToTable("Teachers");
                 });
 
+            modelBuilder.Entity("CourseStudent", b =>
+                {
+                    b.HasOne("UniversityApp.Entities.Course", null)
+                        .WithMany()
+                        .HasForeignKey("CoursesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UniversityApp.Entities.Student", null)
+                        .WithMany()
+                        .HasForeignKey("StudentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("UniversityApp.Entities.Course", b =>
                 {
-                    b.HasOne("UniversityApp.Entities.Student", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("StudentId");
-
                     b.HasOne("UniversityApp.Entities.Teacher", "Teacher")
                         .WithMany("Courses")
                         .HasForeignKey("TeacherId")
@@ -150,11 +171,6 @@ namespace UniversityApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("UniversityApp.Entities.Student", b =>
-                {
-                    b.Navigation("Courses");
                 });
 
             modelBuilder.Entity("UniversityApp.Entities.Teacher", b =>

@@ -11,15 +11,15 @@ namespace UniversityApp.Contexts;
 
 class AppDbContext : DbContext
 {
-    DbSet<Student> Students { get; set; } = null!;
-    DbSet<Course> Courses { get; set; } = null!;
-    DbSet<StudentCard> StudentCards { get; set; } = null!;
-    DbSet<Teacher> Teachers { get; set; } = null!;
+    public DbSet<Student> Students { get; set; } = null!;
+    public DbSet<Course> Courses { get; set; } = null!;
+    public DbSet<StudentCard> StudentCards { get; set; } = null!;
+    public DbSet<Teacher> Teachers { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "SERVER=localhost;DataBase=OnlineStoreDB;Trusted_Connection=True;TRUSTSERVERCERTIFICATE=true"
+            "SERVER=localhost;DataBase=UniversityDbPrac;Trusted_Connection=True;TRUSTSERVERCERTIFICATE=true"
             );
 
         base.OnConfiguring(optionsBuilder);
